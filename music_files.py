@@ -50,6 +50,21 @@ def handle_mp3(path, track, file):
         new_name = artist + " - " + title + ".mp3"
         rename(path, file, new_name)
 
+def handle_flac(path, track, file):
+    # Artist
+    if ("artist" in track.keys()):
+        artist = str(track.get("artist")[0])
+        artist = prettify(artist)
+
+    # Track Title
+    if ("title" in track.keys()):
+        title = str(track.get("title")[0])
+        title = prettify(title)
+
+    if artist and title:
+        new_name = artist + " - " + title + ".flac"
+        rename(path, file, new_name)
+
 def main(folder_path, sub_dirs):
     for file_name in os.listdir(folder_path):
         file_path = folder_path + "\\" + file_name
@@ -65,9 +80,10 @@ def main(folder_path, sub_dirs):
                 track = MP3(file_path)
                 handle_mp3(folder_path, track, file_name)
             elif file_type == mutagen.flac.FLAC:
-                file = FLAC(file_path)
+                track = FLAC(file_path)
+                handle_flac(folder_path, track, file_name)
             else:
-                print(f"{yellow}File type {type} not supported...{no_color}")
+                print(f"{yellow}File type {type} is not supported yet...{no_color}")
 
 def exit_program():
     print(f"{green}BYE!!{no_color}")
