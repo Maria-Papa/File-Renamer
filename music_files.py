@@ -50,13 +50,13 @@ def handle_mp3(path, track, file):
         new_name = artist + " - " + title + ".mp3"
         rename(path, file, new_name)
 
-def main(folder_path):
+def main(folder_path, sub_dirs):
     for file_name in os.listdir(folder_path):
         file_path = folder_path + "\\" + file_name
 
-        if os.path.isdir(file_path):
+        if os.path.isdir(file_path) and sub_dirs:
             # Recursive Call
-            main(file_path)
+            main(file_path, True)
         elif os.path.isfile(file_path):
             file      = mutagen.File(file_path)
             file_type = type(file)
@@ -74,35 +74,36 @@ def exit_program():
     sys.exit(0)
 
 ############### CODE ################
-# folder = "C:\\Users\\Christos\\Desktop\\Rename_TEST\\"
-
 print("#######################################################################################")
 while True:
-    ui = input(f"Enter the {green}file path{no_color} that contains the files to be renamed or enter {red}n{no_color} to exit: ")
+    ui_1 = input(f"Enter the {green}file path{no_color} that contains the files to be renamed or enter {red}exit{no_color} to exit: ")
 
-    if ui != "n" and not os.path.isdir(ui):
+    if ui_1.lower() != "exit" and not os.path.isdir(ui_1):
         print("Please enter a correct file path: ")
         continue
     else:
         break
 
-if ui == "n":
+if ui_1.lower() == "exit":
     exit_program()
 else:
-    folder = ui
+    folder = ui_1
+
+print(f"The directory is set to {yellow}'{folder}'{no_color}.")
 
 while True:
-    print(f"The directory is set to {yellow}'{folder}'{no_color}.")
-    ui = input(f"Are you sure you want to rename all the music files inside this directory? ({green}y{no_color}/{red}n{no_color}) ")
+    ui_2 = input(f"Do you want to rename the music files inside all sub directories as well? ({green}y{no_color}/{red}n{no_color}) ")
 
-    if ui == "y" or ui == "n":
+    if ui_2.lower() == "y" or ui_2.lower() == "n":
         break
     else:
         print(f"Please answer {green}y{no_color} or {red}n{no_color}")
         continue
 print("#######################################################################################")
 
-if ui == "n":
+if ui_2.lower() == "exit":
     exit_program()
-else:
-    main(folder)
+elif ui_2.lower() == "n":
+    main(folder, False)
+elif ui_2.lower() == "y":
+    main(folder, True)
