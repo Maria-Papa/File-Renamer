@@ -18,17 +18,20 @@ def lowercase_match(match):
     return match.group().lower()
 
 def title(value):
+    """Make a string title, without some common mistakes."""
     titled = value.title()
     titled = re.sub(r"([a-z])'([A-Z])", lowercase_match, titled)  # Fix Don'T
     titled = re.sub(r"\d([A-Z])", lowercase_match, titled)  # Fix 1St and 2Nd
     return titled
 
 def prettify(str):
+    """Get a string and return it stripped and in title format."""
     str = str.strip()
     str = title(str)
     return str 
 
 def rename(path, current_name, new_name):
+    """Rename a file."""
     current_file = path + "\\" + current_name
     new_file     = path + "\\" + new_name
 
@@ -36,6 +39,7 @@ def rename(path, current_name, new_name):
     os.rename(current_file, new_file)
 
 def handle_mp3(path, track, file):
+    """Handle MP3 files."""
     # Artist
     if ("TPE1" in track.keys()):
         artist = str(track.get("TPE1"))
@@ -51,6 +55,7 @@ def handle_mp3(path, track, file):
         rename(path, file, new_name)
 
 def handle_flac(path, track, file):
+    """Handle FLAC files."""
     # Artist
     if ("artist" in track.keys()):
         artist = str(track.get("artist")[0])
